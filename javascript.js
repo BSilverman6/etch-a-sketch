@@ -6,12 +6,31 @@ addInk();
 let setSize = document.querySelector(".setSize");
 let getSize = document.querySelector("#sizeSlider");
 let setSizeVal = document.querySelector("#sizeSliderValue");
-let colorGoal = "rgb(0,0,0)";
+let radios = document.querySelectorAll(`input[type="radio"]`)
+const colorPicker = document.querySelector(`input[type="color"]`)
+let colorStyle = "gradual";
+let colorGoal = "rgb(255,0,0)";
 
 
 
 
+radios.forEach((item)=>{
+    item.addEventListener("change", (event)=>{
+        colorStyle = event.target.value;
+    });
+});
 
+colorPicker.addEventListener("change", (event)=>{
+    colorGoal = hexToRGBString(event.target.value);
+});
+
+function hexToRGBString(hex){
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return `rgb(${r},${g},${b})`
+
+}
 
 //creates an array of sketchboxes in the "Boxes Div"
 function createSketchBoxes (x){
@@ -30,13 +49,46 @@ function createSketchBoxes (x){
     }
 };
 
+setSize.addEventListener("click", ()=> {
+    while (boxes.firstChild){
+        boxes.removeChild(boxes.firstChild);
+    };
+    createSketchBoxes(getSize.value);
+    addInk();
+});
+
+getSize.oninput = function(){ 
+    setSizeVal.innerHTML = this.value;
+};
+
 //Adds Mouselistener to Color on Event
 function addInk() {
 let boxArray = document.querySelectorAll(".box")
 boxArray.forEach((item)=>{
     item.addEventListener("mouseenter", (event)=>{
        // event.target.style.backgroundColor=makeDarker(event.target.style.backgroundColor);
-        event.target.style.backgroundColor=makeColor(event.target.style.backgroundColor)
+        //event.target.style.backgroundColor=makeColor(event.target.style.backgroundColor)
+        switch (colorStyle){
+            case "gradual":
+                colorGoal = "rgb(0,0,0)";
+                event.target.style.backgroundColor=makeColor(event.target.style.backgroundColor)
+                break;
+            case "colorGradual":
+                colorGoal = hexToRGBString(colorPicker.value);
+                event.target.style.backgroundColor=makeColor(event.target.style.backgroundColor);
+                break;
+            case "bAndW":
+                event.target.style.backgroundColor=makeBlack();
+                break;
+            case "random":
+                event.target.style.backgroundColor=makeRandom();
+                break;
+            case "colorSolid":
+                colorGoal = hexToRGBString(colorPicker.value);
+                event.target.style.backgroundColor=makeSolidColor();
+                break;
+        };
+        
         event.target.style.borderColor = event.target.style.backgroundColor;
     });
 });
@@ -54,7 +106,7 @@ function rgbToArray(rgbString){
     return pieces2;
     
 }
-
+/*
 //Takes RGB Values, parses them into 3 numbers. Calls reduceRGB function to alter these values
 function makeDarker(rgb) {
     let rgbArray = rgbToArray(rgb)
@@ -64,11 +116,17 @@ function makeDarker(rgb) {
 function reduceRGB(x){
     let rGBVal= x-25;
     return rGBVal<0 ?0: rGBVal;
-};
+};*/
 
 
 
 
+
+
+
+
+
+//Color Related
 function makeColor(rgb){
     const colorOld = rgbToArray(rgb);
     const colorGoalArray = rgbToArray(colorGoal);
@@ -89,6 +147,10 @@ function makeBlack(){
     return "rgb(0,0,0)";
 }
 
+function makeSolidColor(){
+    return colorGoal;
+}
+
 
 //RANDOM COLOR RELATED - returns random color for changing color
 function makeRandom(){
@@ -97,19 +159,3 @@ function makeRandom(){
 function randomRGB(){
     return Math.floor(Math.random()*256);
 }
-
-
-
-
-
-
-setSize.addEventListener("click", ()=> {
-    while (boxes.firstChild){
-        boxes.removeChild(boxes.firstChild);
-    };
-    createSketchBoxes(getSize.value);
-    addInk();
-});
-getSize.oninput = function(){ 
-    setSizeVal.innerHTML = this.value;
-};

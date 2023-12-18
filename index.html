@@ -15,30 +15,29 @@
             <div class = "bottomBar">
                 <div class = "sizer">
                     <input type="range" min="1" max = "100" value = "16" class = "slider" id = "sizeSlider">
-                    <button class = "setSize">Set Size: <span id="sizeSliderValue">16</span></button>
+                    <button class = "setSize">Reset and Size: <span id="sizeSliderValue">16</span></button>
                 </div>
                 <div class = "colorer">
-                    <label class="colorOption"> Gradual
-                        <input type="radio" name ="gradual">
-                        <span class ="checkMark"></span>
+                    <label class="colorOption"> Gradual Grey
+                        <input type="radio" name ="color" value="gradual" checked>
                     </label>
-                    <label class="colorOption"> Black and White
-                        <input type="radio" name ="bAndW">
-                        <span class ="checkMark"></span>
+                    <label class="colorOption"> Black
+                        <input type="radio" name ="color" value="bAndW">
                     </label>
                     <label class="colorOption"> Random
-                        <input type="radio" name ="random">
-                        <span class ="checkMark"></span>
+                        <input type="radio" name ="color" value="random">
                     </label>
-                    <label class="colorOption"> Color Gradual
-                        <input type="radio" name ="colorGradual">
-                        <span class ="checkMark"></span>
+                    <label class="colorOption"> Gradual Color
+                        <input type="radio" name ="color" value="colorGradual">
+                    </label>
+                    <label class="colorOption"> Solid Color
+                        <input type="radio" name ="color" value="colorSolid">
                     </label>
                 </div>
+                <div class ="colorPicker">
+                    <input type="color" value="#ff0000">
+                </div>
             </div>
-        </div>
-        <div>Button Testing Area</div>
-            
-        </div>
+        </div>            
     </body>
 </html>

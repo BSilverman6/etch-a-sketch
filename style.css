@@ -66,4 +66,5 @@ gap: 20px;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    text-align: right;
 }
