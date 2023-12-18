@@ -6,19 +6,10 @@ addInk();
 let setSize = document.querySelector(".setSize");
 let getSize = document.querySelector("#sizeSlider");
 let setSizeVal = document.querySelector("#sizeSliderValue");
+let colorGoal = "rgb(0,0,0)";
 
 
-setSize.addEventListener("click", ()=> {
-    while (boxes.firstChild){
-        boxes.removeChild(boxes.firstChild);
-    };
-    createSketchBoxes(getSize.value);
-    addInk();
-});
 
-getSize.oninput = function(){ 
-    setSizeVal.innerHTML = this.value;
-};
 
 
 
@@ -39,30 +30,86 @@ function createSketchBoxes (x){
     }
 };
 
-//Adds Mouselistener to Darken on Event
+//Adds Mouselistener to Color on Event
 function addInk() {
 let boxArray = document.querySelectorAll(".box")
 boxArray.forEach((item)=>{
     item.addEventListener("mouseenter", (event)=>{
-        event.target.style.backgroundColor=getDarker(event.target.style.backgroundColor);
+       // event.target.style.backgroundColor=makeDarker(event.target.style.backgroundColor);
+        event.target.style.backgroundColor=makeColor(event.target.style.backgroundColor)
         event.target.style.borderColor = event.target.style.backgroundColor;
     });
 });
 };
 
-//Takes RGB Values, parses them into 3 numbers. Calls reduce function to alter these values
-function getDarker(rgb) {
-    let stringRGB = String(rgb);
-    if(rgb==""){ stringRGB = "rgb(255,255,255)"};
+
+//takes a String of RGB(#,#,#) and turns it into an array [#,#,#]
+function rgbToArray(rgbString){
+    let string = rgbString.toString();
+    if(rgbString==""){ string = "rgb(255,255,255)"};
     //initialize value for getting color!
-    const pieces = stringRGB.split("(",);
-    const pieces2 = pieces[1].split(",");
-    const pieces3 = pieces2.map((element) => reduceRGB(element));
-    stringRGB = `rgb(${pieces3[0]},${pieces3[1]},${pieces3[2]})`
-    return stringRGB ;
+    const pieces = string.split("(");
+    let pieces2 = pieces[1].split(",");
+    pieces2 = pieces2.map((element)=>parseInt(element));
+    return pieces2;
+    
+}
+
+//Takes RGB Values, parses them into 3 numbers. Calls reduceRGB function to alter these values
+function makeDarker(rgb) {
+    let rgbArray = rgbToArray(rgb)
+    rgbArray = rgbArray.map((element) => reduceRGB(element));
+    return `rgb(${rgbArray[0]},${rgbArray[1]},${rgbArray[2]})`
+};
+function reduceRGB(x){
+    let rGBVal= x-25;
+    return rGBVal<0 ?0: rGBVal;
 };
 
-function reduceRGB(x){
-    let rGBVal= parseInt(x)-25;
-    return rGBVal<0 ?0: rGBVal;
+
+
+
+function makeColor(rgb){
+    const colorOld = rgbToArray(rgb);
+    const colorGoalArray = rgbToArray(colorGoal);
+    const colorModifier = getScale(colorGoal);
+    const colorNew = [colorOld[0]-colorModifier[0],colorOld[1]-colorModifier[1],colorOld[2]-colorModifier[2],];
+    if (colorNew[0]<colorGoalArray[0]||colorNew[1]<colorGoalArray[1]||colorNew[2]<colorGoalArray[2]){return colorGoal};
+    return `rgb(${colorNew.toString()})`;
+}
+//This take RGB String. It Returns RGB Array of small Values to subtract
+function getScale(rgbDarkString){
+    let scale = rgbToArray(rgbDarkString);
+    scale = scale.map((element)=> Math.floor((255-element)/10));
+    return scale;
+}
+
+//Returns Color Black for changing color
+function makeBlack(){
+    return "rgb(0,0,0)";
+}
+
+
+//RANDOM COLOR RELATED - returns random color for changing color
+function makeRandom(){
+    return `rgb(${randomRGB()},${randomRGB()},${randomRGB()})`
+}
+function randomRGB(){
+    return Math.floor(Math.random()*256);
+}
+
+
+
+
+
+
+setSize.addEventListener("click", ()=> {
+    while (boxes.firstChild){
+        boxes.removeChild(boxes.firstChild);
+    };
+    createSketchBoxes(getSize.value);
+    addInk();
+});
+getSize.oninput = function(){ 
+    setSizeVal.innerHTML = this.value;
 };

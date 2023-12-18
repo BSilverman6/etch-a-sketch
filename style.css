@@ -3,8 +3,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 400px;
-    height: 400px;
+    width: 500px;
+    height: 500px;
     border: 2px solid black;
     margin: 12px;
     
@@ -30,7 +30,7 @@
     align-items: center;
     flex-direction: column;
     padding: 40px;
-    width: 480px;
+    width: 580px;
     border-radius: 30px;
     color: bisque;
     font-family: "helvetica";
@@ -53,11 +53,17 @@ align-self: flex-start;
 display: flex;
 justify-content: flex-start;
 padding-left: 40px;
+gap: 20px;
 }
 
 .sizer{
     display: flex;
     flex-direction: column;
     gap:20px;
-    justify-content: space-between;
+    justify-content: space-around;
+}
+.colorer{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
