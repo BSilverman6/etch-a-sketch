@@ -12,11 +12,14 @@ createSketchBoxes(16);
 addInk();
 
 
-
-
 radios.forEach((item)=>{
     item.addEventListener("change", (event)=>{
         colorStyle = event.target.value;
+        console.log(event.target.value);
+        console.log (event.target.checked);
+        console.log(radios[1].value);
+        console.log(radios[1].checked);
+
     });
 });
 
@@ -77,17 +80,16 @@ boxArray.forEach((item)=>{
                 break;
             case "bAndW":
                 colorGoal = "rgb(0,0,0)";
-                event.target.style.backgroundColor=makeSolid();
+                event.target.style.backgroundColor=colorGoal;
                 break;
             case "random":
                 event.target.style.backgroundColor=makeRandom();
                 break;
             case "colorSolid":
                 colorGoal = hexToRGBString(colorPicker.value);
-                event.target.style.backgroundColor=makeSolid();
+                event.target.style.backgroundColor=colorGoal;
                 break;
         };
-        
         event.target.style.borderColor = event.target.style.backgroundColor;
     });
 });
@@ -105,19 +107,6 @@ function rgbToArray(rgbString){
     return pieces2;
     
 }
-/*
-//Takes RGB Values, parses them into 3 numbers. Calls reduceRGB function to alter these values
-function makeDarker(rgb) {
-    let rgbArray = rgbToArray(rgb)
-    rgbArray = rgbArray.map((element) => reduceRGB(element));
-    return `rgb(${rgbArray[0]},${rgbArray[1]},${rgbArray[2]})`
-};
-function reduceRGB(x){
-    let rGBVal= x-25;
-    return rGBVal<0 ?0: rGBVal;
-};*/
-
-
 
 //Color Related
 function makeColor(rgb){
@@ -125,11 +114,9 @@ function makeColor(rgb){
     const colorGoalArray = rgbToArray(colorGoal);
     const colorModifier = getScale(colorGoal);
     const colorNew = [colorOld[0]-colorModifier[0],colorOld[1]-colorModifier[1],colorOld[2]-colorModifier[2],];
-   // if (colorNew[0]<colorGoalArray[0]||colorNew[1]<colorGoalArray[1]||colorNew[2]<colorGoalArray[2]){return colorGoal};
     if (colorNew[0]<colorGoalArray[0]&&colorNew[0]<colorOld[0]) {colorNew[0]= Math.min(colorGoalArray[0], colorOld[0])};
     if (colorNew[1]<colorGoalArray[1]&&colorNew[1]<colorOld[1]) {colorNew[1]= Math.min(colorGoalArray[1], colorOld[1])};
     if (colorNew[2]<colorGoalArray[2]&&colorNew[2]<colorOld[2]) {colorNew[2]= Math.min(colorGoalArray[2], colorOld[2])};
-
     return `rgb(${colorNew.toString()})`;
 }
 //This take RGB String. It Returns RGB Array of small Values to subtract
@@ -138,11 +125,6 @@ function getScale(rgbDarkString){
     scale = scale.map((element)=> Math.floor((255-element)/10));
     return scale;
 }
-
-function makeSolid(){
-    return colorGoal;
-}
-
 
 //RANDOM COLOR RELATED - returns random color for changing color
 function makeRandom(){
