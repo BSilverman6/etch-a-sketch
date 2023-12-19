@@ -1,8 +1,6 @@
 
 
 const boxes = document.querySelector(".boxes");
-createSketchBoxes(16);
-addInk();
 let setSize = document.querySelector(".setSize");
 let getSize = document.querySelector("#sizeSlider");
 let setSizeVal = document.querySelector("#sizeSliderValue");
@@ -10,6 +8,8 @@ let radios = document.querySelectorAll(`input[type="radio"]`)
 const colorPicker = document.querySelector(`input[type="color"]`)
 let colorStyle = "gradual";
 let colorGoal = "rgb(255,0,0)";
+createSketchBoxes(16);
+addInk();
 
 
 
@@ -66,8 +66,6 @@ function addInk() {
 let boxArray = document.querySelectorAll(".box")
 boxArray.forEach((item)=>{
     item.addEventListener("mouseenter", (event)=>{
-       // event.target.style.backgroundColor=makeDarker(event.target.style.backgroundColor);
-        //event.target.style.backgroundColor=makeColor(event.target.style.backgroundColor)
         switch (colorStyle){
             case "gradual":
                 colorGoal = "rgb(0,0,0)";
@@ -78,14 +76,15 @@ boxArray.forEach((item)=>{
                 event.target.style.backgroundColor=makeColor(event.target.style.backgroundColor);
                 break;
             case "bAndW":
-                event.target.style.backgroundColor=makeBlack();
+                colorGoal = "rgb(0,0,0)";
+                event.target.style.backgroundColor=makeSolid();
                 break;
             case "random":
                 event.target.style.backgroundColor=makeRandom();
                 break;
             case "colorSolid":
                 colorGoal = hexToRGBString(colorPicker.value);
-                event.target.style.backgroundColor=makeSolidColor();
+                event.target.style.backgroundColor=makeSolid();
                 break;
         };
         
@@ -120,19 +119,17 @@ function reduceRGB(x){
 
 
 
-
-
-
-
-
-
 //Color Related
 function makeColor(rgb){
     const colorOld = rgbToArray(rgb);
     const colorGoalArray = rgbToArray(colorGoal);
     const colorModifier = getScale(colorGoal);
     const colorNew = [colorOld[0]-colorModifier[0],colorOld[1]-colorModifier[1],colorOld[2]-colorModifier[2],];
-    if (colorNew[0]<colorGoalArray[0]||colorNew[1]<colorGoalArray[1]||colorNew[2]<colorGoalArray[2]){return colorGoal};
+   // if (colorNew[0]<colorGoalArray[0]||colorNew[1]<colorGoalArray[1]||colorNew[2]<colorGoalArray[2]){return colorGoal};
+    if (colorNew[0]<colorGoalArray[0]&&colorNew[0]<colorOld[0]) {colorNew[0]= Math.min(colorGoalArray[0], colorOld[0])};
+    if (colorNew[1]<colorGoalArray[1]&&colorNew[1]<colorOld[1]) {colorNew[1]= Math.min(colorGoalArray[1], colorOld[1])};
+    if (colorNew[2]<colorGoalArray[2]&&colorNew[2]<colorOld[2]) {colorNew[2]= Math.min(colorGoalArray[2], colorOld[2])};
+
     return `rgb(${colorNew.toString()})`;
 }
 //This take RGB String. It Returns RGB Array of small Values to subtract
@@ -142,12 +139,7 @@ function getScale(rgbDarkString){
     return scale;
 }
 
-//Returns Color Black for changing color
-function makeBlack(){
-    return "rgb(0,0,0)";
-}
-
-function makeSolidColor(){
+function makeSolid(){
     return colorGoal;
 }
 
